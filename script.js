@@ -73,11 +73,7 @@ const huntingtonWeather = {
   ]
 };
 
-// function buildHeader(city, forecastLength){
-//     const headingHTML= `<h2>${city}</h2>
-//     <h3>${forecastLength}</h3>`
-//     return headingHTML
-// }
+
 
 // Function that returns HTML string to build a weather forecast header
 const buildHeader = (city, forecastLength) => {
@@ -87,6 +83,7 @@ const buildHeader = (city, forecastLength) => {
 };
 
 // Function that builds a single day in the weather forecast
+// Accepts a single object representing one day's weather and returns an HTML string representing that object
 const buildSingleDay = singleDayObject => {
     let tempClass = ""
     if(singleDayObject.high > 90){
@@ -107,55 +104,42 @@ const buildSingleDay = singleDayObject => {
 };
 
 // Function that returns an HTML string of all the days in a forecast
+// Accepts an array of day objects, loops over them, and calls the buildSingleDay function to build an HTML string for each day and compile it into one giant HTML string
+// Returns the giant HTML string
 const buildEntireForecast = (weatherArray) => {
     let giantHTMLStringOfEverything = ""
     for(let i = 0; i < weatherArray.length; i++){
         const singleDay = buildSingleDay(weatherArray[i])
         giantHTMLStringOfEverything += singleDay
     }
-    console.log(giantHTMLStringOfEverything)
     return giantHTMLStringOfEverything
 }
 
+// Function that builds and returns a single city's entire weather HTML string, including heading AND forecast
+const buildSingleCityHTMLString = singleCityWeatherObject => {
+    return `${buildHeader(singleCityWeatherObject.location, singleCityWeatherObject.foreCastType)}
+    ${buildEntireForecast(singleCityWeatherObject.forecast)}`
+}
 
 
-
-
-
-// Function that builds an entire weather forecast component and prints it to the DOM
-
-const printWeatherForecast = () => {
-    // Header for Huntington
-  const huntingtonHeader = buildHeader(
-    huntingtonWeather.location,
-    huntingtonWeather.foreCastType
-  );
-
-  // Forecast for huntington
-  const huntingtonEntireForecast = buildEntireForecast(huntingtonWeather.forecast)
-
-// Header for charleston
-  const charlestonHeader = buildHeader(
-    charlestonWeather.location,
-    charlestonWeather.foreCastType
-  );
-
-  // Forecast for charleston
-  const charlestonEntireForecast = buildEntireForecast(charlestonWeather.forecast)
-//   const singleDay = buildSingleDay(huntingtonWeather.forecast[0])
-//   const singleDay = buildSingleDay(huntingtonWeather.forecast[1])
-  // const header = buildHeader("taco", "cheese")
-  const containerToPrint = document.querySelector("#weather-forecast");
-  containerToPrint.innerHTML = huntingtonHeader + huntingtonEntireForecast + charlestonHeader + charlestonEntireForecast;
+// Function that prints a given HTML string to the DOM
+// Accepts two parameters: the HTML string you want to print and the id of the container you want to put it in
+// This will work for anything we want to print!
+const printToDOM = (htmlString, htmlContainerId) => {
+    const containerToPrint = document.querySelector(`#${htmlContainerId}`)
+    containerToPrint.innerHTML += htmlString
 };
 
-printWeatherForecast();
 
-// const buildHeader = (city, forecastLength) => `<h2>${city}</h2>
-// <h3>${forecastLength}</h3>`
+// ------------- Build and print Huntington -----------------------------------//
+// Build the HTML string to represent Huntington's weather
+const huntingtonHTMLString = buildSingleCityHTMLString(huntingtonWeather)
+// Print it to the DOM to the element with an id of "weather-forecast"
+printToDOM(huntingtonHTMLString, "weather-forecast")
 
-// print the location in the DOM
-// print the type of forecast in the dom
-// print a single day in the forecast
 
-// Add a condition-- check and see if the high is above 90. If so, give it a red background
+// --------------- Build and print Charleston --------------------------------//
+// Build the HTML string to represent Charleston's weather
+const charlestonHTMLString = buildSingleCityHTMLString(charlestonWeather, "container")
+// Print it to the DOM to element with the id of "weather-forecast"
+printToDOM(charlestonHTMLString, "weather-forecast")
