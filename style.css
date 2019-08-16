@@ -1,0 +1,13 @@
+.forecast-day{
+    border: 1px solid black;
+    padding: 1em;
+    margin: 1em;
+}
+
+.above-90{
+    background-color: lightcoral
+}
+
+.below-90{
+    background-color: lightblue
+}
